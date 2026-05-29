@@ -1,0 +1,442 @@
+# Dd2.com.vn <!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ TRẠM BƠM CLOUD TURBO VẠN TỶ CHỮ CỔ - MAX MIN v7.0 ⚡</title>
+    <style>
+        /* GIAO DIỆN KHÔNG GIAN MA TRẬN CLOUD SIÊU MẠNH */
+        body {
+            background-color: #010101;
+            color: #00ff66;
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* NÚT MENU TỐI GIẢN ☰ */
+        .menu-btn {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            font-size: 32px;
+            background: none;
+            border: none;
+            color: #00ffff;
+            cursor: pointer;
+            z-index: 10000;
+            text-shadow: 0 0 15px #00ffff;
+            transition: 0.3s;
+        }
+        .menu-btn:hover {
+            color: #ff0055;
+            transform: scale(1.15);
+        }
+
+        /* SIDEBAR NGĂN KÉO MẬT ĐẠO CHẠY NGẦM */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 270px;
+            height: 100%;
+            background: #050505;
+            border-right: 3px solid #00ffff;
+            transition: 0.4s cubic-bezier(0.1, 0.9, 0.2, 1);
+            padding: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 8px 0 30px rgba(0, 255, 255, 0.2);
+        }
+        .sidebar.active {
+            left: 0;
+        }
+        .sidebar-title {
+            color: #00ffff;
+            font-size: 18px;
+            text-align: center;
+            border-bottom: 2px solid #ff0055;
+            padding-bottom: 12px;
+            margin-top: 50px;
+            text-shadow: 0 0 8px #00ffff;
+            font-weight: bold;
+        }
+        .sidebar-status {
+            margin-top: 25px;
+            color: #555;
+            font-size: 13px;
+            line-height: 2.5;
+        }
+        .sidebar-status span {
+            color: #00ff66;
+        }
+
+        /* MẬT ĐẠO GIẤU KÍN DƯỚI ĐÁY SIDEBAR - GÕ MÃ ĐÚNG 8386 */
+        .secret-trigger {
+            padding: 20px;
+            border-top: 1px dashed #111;
+            color: #020202; /* Ẩn biệt tăm vào nền tối */
+            cursor: pointer;
+            text-align: center;
+            font-size: 10px;
+            user-select: none;
+        }
+        .secret-trigger:hover {
+            color: #111;
+        }
+
+        /* KHUNG CHỨA TOÀN BỘ GIAO DIỆN */
+        .wrapper {
+            max-width: 850px;
+            margin: 80px auto 40px auto;
+            padding: 15px;
+        }
+        .main-header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+        .main-header h1 {
+            margin: 0;
+            font-size: 25px;
+            text-shadow: 0 0 20px #00ff66;
+            letter-spacing: 1.5px;
+        }
+        .main-header p {
+            color: #666;
+            font-size: 13px;
+            margin-top: 8px;
+        }
+
+        /* PANEL HỆ THỐNG */
+        .panel {
+            background: #050505;
+            border: 2px solid #111;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+        .panel-public { border-color: #00ffff; box-shadow: 0 0 15px rgba(0, 255, 255, 0.1); }
+        .panel-secret { border-color: #ff0055; box-shadow: 0 0 20px rgba(255, 0, 85, 0.15); }
+        
+        .panel-title {
+            margin-top: 0;
+            font-size: 17px;
+            font-weight: bold;
+            letter-spacing: 1.5px;
+            border-bottom: 1px solid #222;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .text-pub { color: #00ffff; text-shadow: 0 0 5px #00ffff; }
+        .text-sec { color: #ff0055; text-shadow: 0 0 5px #ff0055; }
+
+        /* INPUT THANH TÌM KIẾM */
+        .search-bar {
+            width: 96%;
+            padding: 14px;
+            background: #000;
+            color: #fff;
+            font-size: 18px;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        .bar-pub { border: 2px solid #00ffff; }
+        .bar-pub:focus { outline: none; box-shadow: 0 0 12px #00ffff; }
+        .bar-sec { border: 2px solid #ff0055; }
+        .bar-sec:focus { outline: none; box-shadow: 0 0 12px #ff0055; }
+
+        /* NÚT ĐIỀU KHIỂN HỆ THỐNG */
+        .action-btn {
+            padding: 14px 32px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+            border: none;
+            margin: 8px;
+            border-radius: 4px;
+            transition: 0.2s;
+        }
+        .btn-pub { background: #00ffff; color: #000; }
+        .btn-pub:hover { background: #fff; box-shadow: 0 0 12px #fff; }
+        .btn-sec { background: #ff0055; color: #fff; }
+        .btn-sec:hover { background: #00ff66; color: #000; box-shadow: 0 0 15px #00ff66; }
+
+        /* KHO CHỨA CUỘN SIÊU TỐC ĐỘ */
+        .big-list {
+            max-height: 550px;
+            overflow-y: auto;
+            background: #020202;
+            border: 1px solid #161616;
+            padding: 10px;
+            margin-top: 20px;
+            border-radius: 6px;
+        }
+        .list-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px;
+            border-bottom: 1px solid #0a0a0a;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+        .list-row:hover {
+            background: #070707;
+            border-color: #222;
+        }
+        .id-tag {
+            padding: 3px 8px;
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 3px;
+        }
+        .tag-pub { background: #00ffff; color: #000; }
+        .tag-sec { background: #ff0055; color: #fff; }
+        
+        .row-details {
+            margin-left: 15px;
+            font-size: 11px;
+            color: #3b3b3b;
+        }
+        .final-char {
+            font-size: 26px;
+            color: #00ff66;
+            font-weight: bold;
+            text-shadow: 0 0 4px rgba(0,255,102,0.4);
+            letter-spacing: 3px;
+        }
+
+        #secretZone {
+            display: none;
+        }
+
+        /* THANH CUỘN PHONG CÁCH MATRIX CHẠY TRÊN ĐÁM MÂY */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: #111; border-radius: 4px; border: 1px solid #ff0055; }
+        ::-webkit-scrollbar-thumb:hover { background: #ff0055; }
+    </style>
+</head>
+<body>
+
+    <button class="menu-btn" onclick="controlSidebar()">☰</button>
+
+    <div class="sidebar" id="mainSidebar">
+        <div>
+            <div class="sidebar-title">CLOUD TURBO CORE</div>
+            <div class="sidebar-status">
+                <p>• Máy chủ: <span>CLOUD SERVER MAX</span></p>
+                <p>• Dung lượng xả: <span>10 TỶ TỔ HỢP TỰ ĐỘNG</span></p>
+                <p>• Loại mật mã: <span>100% CỔ ĐẠI THUẦN TÚY</span></p>
+                <p>• Thao tác: <span>CHẠM LÀ AUTO-COPY</span></p>
+            </div>
+        </div>
+        
+        <div class="secret-trigger" onclick="openSecretMậtĐạo()">[ SYSTEM EMPTY ]</div>
+    </div>
+
+    <div class="wrapper">
+        
+        <div id="publicZone">
+            <div class="main-header">
+                <h1 style="color: #00ffff; text-shadow: 0 0 15px #00ffff;">🔍 HỆ THỐNG TRUY XUẤT MẶT TIỀN</h1>
+                <p>Nhập mã số ID để định vị ký tự công khai. Chạm vào hàng để tự động copy lập tức.</p>
+            </div>
+
+            <div class="panel panel-public">
+                <div class="panel-title text-pub">⚙️ BỘ QUÉT DỮ LIỆU CÔNG KHAI</div>
+                <input type="text" id="pubInput" class="search-bar bar-pub" oninput="searchPubData()" placeholder="Gõ mã số hiệu ID cần tìm (Ví dụ: #P01)...">
+                <div style="font-size:12px; color:#00ffff; text-align:left;" id="pubLog">Giao diện ngụy trang đám mây an toàn.</div>
+                
+                <div class="big-list" id="pubRenderContainer"></div>
+            </div>
+        </div>
+
+
+        <div id="secretZone">
+            <div class="main-header">
+                <h1 style="color: #ff0055; text-shadow: 0 0 15px #ff0055;">☣️ TRẠM XẢ ĐẠN 10 TỶ CHỮ CỔ - CLOUD CORE ENGINE</h1>
+                <p>Lõi máy chủ đám mây tự động kích hoạt vòng lặp toán học, giải phóng chuỗi ký tự lèo ngoèo nguyên thủy siêu tốc.</p>
+            </div>
+
+            <div class="panel panel-secret">
+                <div class="panel-title text-sec">🔒 BỘ TRA CỨU NGẦM VẠN TỶ</div>
+                <input type="text" id="secInput" class="search-bar bar-sec" oninput="searchSecData()" placeholder="Gõ số ID ngầm hoặc dán thẳng chuỗi chữ cổ vào đây để nhận diện ngược...">
+                <div style="font-size:12px; color:#ff0055; text-align:left;" id="secLog">Đang đồng bộ hóa lõi đúc Cloud...</div>
+            </div>
+
+            <div class="panel panel-secret">
+                <div class="panel-title text-sec">📦 KHO BÁU CHỮ CỔ PHỐI CHUỖI TỰ ĐỘNG (BẤM LÀ AUTO-COPY)</div>
+                
+                <div class="big-list" id="secRenderContainer"></div>
+                
+                <br>
+                <div style="text-align: center;">
+                    <button class="action-btn btn-sec" onclick="injectMoreCloudTurboSymbols()">💥 BƠM GIA TỐC SIÊU TỐC HÀNG LOẠT</button>
+                    <button class="action-btn btn-pub" onclick="emergencyLockSystem()">🔒 KHÓA KHẨN CẤP</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Kho phôi bùa chữ cổ đại đồ sộ độc lạ nhất thế giới máy tính
+        const sieuKhoPhoiCoDai = [
+            "𒀱", "𒅒", "𪚥", "𒁂", "𖡹", "𒁏", "𓁹", "𓆗", "𓃿", "𓇽", "🝪", "𖦹", "☣", "☢", "卍", "𒈓", "𒆙", "儸", "𖣔", "𒈔", "𓂺", "𒀰", "𒁄", "𒁓", "𒁚", "𒂓", "𒂝", "𒃏", "𒄕", "𒄢", "ின", "𒇢", "启发", "𒉢", "𒊎", "𒊠", "𒋋", "らす", "𒌏", "𒌳", "𒍖", "𒍵", "𒎓", "𒎴", "𓀀", "𓀾", "𓁽", "𓃒", "𓄿", "𓅦", "𓆈", "𓆣", "𓇚", "𓇢", "𓈝", "𓉐", "𓊔", "𓋹", "𓌳", "𓍝", "𓎿", "𓏢", "𓐍", "𓐭", "𓑳", "𓒇", "𓒵", "𓓋", "𓓪", "𓔗", "𓔵", "𓕎", "𓕵", "𓖐", "𓖵", "𓗓", "𓗴", "𒀲", "𒁅", "𒁔", "饉", "𒂔", "𒂞", "હુ", "𒄖", "anquan", "인의", "𒂎", "☠", "⛓️", "༺", "༻", "亗", "⚔", "🔱", "𓆉", "𓆤", "𓇛", "𓇣", "𓈞", "𓉑", "𓊕", "𓋺", "𓌴", "𓍞", "𓏀", "𓏣", "𓐎", "𓐮", "𓑴", "𓒈", "𓒶", "𓓌", "𓓫", "𓔘", "𓔶", "𓕏", "𓕶", "𓖑", "𓖶", "𓗔", "𓗵"
+        ];
+
+        // Dữ liệu ngụy trang công khai
+        let khoGốcCongKhai = [
+            { id: "#P001", name: "PURE CORE", char: "꧁༺亗𒀱亗༻꧂" },
+            { id: "#P002", name: "PURE CORE", char: "𖦹☠𓁹☠𖦹" },
+            { id: "#P003", name: "PURE CORE", char: "〔𪚥𓃿𪚥〕亗" },
+            { id: "#P004", name: "PURE CORE", char: "𒅒𒈓𒆙𒅒" },
+            { id: "#P005", name: "PURE CORE", char: "𖡹𖣔𓇽𖣔𖡹" }
+        ];
+
+        // Bộ nhớ lưu trữ ngầm của trạm Cloud
+        let khoGốcBiMat = [];
+
+        function controlSidebar() {
+            document.getElementById("mainSidebar").classList.toggle("active");
+        }
+
+        // MỞ KHÓA MẬT ĐẠO 8386
+        function openSecretMậtĐạo() {
+            var verifyCode = prompt("Nhập mã kích hoạt hệ thống ngầm:");
+            if (verifyCode === "8386") {
+                alert("MẬT MÃ CHÍNH XÁC! Lõi Cloud Turbo kích hoạt thành công... 🚀");
+                document.getElementById("publicZone").style.display = "none";
+                document.getElementById("secretZone").style.display = "block";
+                controlSidebar();
+                
+                // TUYỆT CHIÊU HOÀNG GIA: Vào một phát là máy tự động đúc xả đạn liền 1000 chuỗi dài dằng dặc xếp sẵn luôn
+                if (khoGốcBiMat.length === 0) {
+                    generateCloudSymbols(1000); 
+                }
+                buildLayoutMatrix(khoGốcBiMat, "secRenderContainer", true);
+                updateCloudStatusLog();
+            } else {
+                alert("Mã sai! Hệ thống tự hủy kết nối.");
+            }
+        }
+
+        function emergencyLockSystem() {
+            document.getElementById("secretZone").style.display = "none";
+            document.getElementById("publicZone").style.display = "block";
+            alert("Đã khóa căn cứ bảo mật! Trả về màn hình ngụy trang.");
+        }
+
+        // ĐÚC DỮ LIỆU RA MÀN HÌNH - CHẠM PHÁT COPY LIỀN TAY KHÔNG CẦN CHỜ ĐỢI
+        function buildLayoutMatrix(dataArray, targetId, isSecret) {
+            const listView = document.getElementById(targetId);
+            listView.innerHTML = "";
+
+            dataArray.forEach(item => {
+                let row = document.createElement("div");
+                row.className = "list-row";
+                
+                // TÍNH NĂNG CHẠM LÀ DÍNH: Copy siêu tốc độ sang bộ nhớ đệm
+                row.onclick = () => {
+                    navigator.clipboard.writeText(item.char);
+                    alert("Đã Auto-Copy mã vạn tỷ: " + item.char + " 🚀 Đem đi quậy liền bạn ơi! He he.");
+                };
+
+                let badgeStyle = isSecret ? "id-tag tag-sec" : "id-tag tag-pub";
+                
+                row.innerHTML = `
+                    <div>
+                        <span class="${badgeStyle}">${item.id}</span>
+                        <span class="row-details">${item.name}</span>
+                    </div>
+                    <div class="final-char">${item.char}</div>
+                `;
+                listView.appendChild(row);
+            });
+        }
+
+        // THUẬT TOÁN ĐÚC CHUỖI TỰ ĐỘNG - PHỐI 6 PHÔI CHỮ CỔ THUẦN TÚY KHÔNG CHỮ THƯỜNG
+        function generateCloudSymbols(amount) {
+            for (let i = 0; i < amount; i++) {
+                let currentLen = khoGốcBiMat.length + 1;
+                let autoId = "#S" + String(currentLen).padStart(6, '0');
+                
+                // Bốc ngẫu nhiên và băm nhỏ các phôi chữ cổ ghép nối liên tục
+                let s1 = sieuKhoPhoiCoDai[Math.floor(Math.random() * sieuKhoPhoiCoDai.length)];
+                let s2 = sieuKhoPhoiCoDai[Math.floor(Math.random() * sieuKhoPhoiCoDai.length)];
+                let s3 = sieuKhoPhoiCoDai[Math.floor(Math.random() * sieuKhoPhoiCoDai.length)];
+                let s4 = sieuKhoPhoiCoDai[Math.floor(Math.random() * sieuKhoPhoiCoDai.length)];
+                let s5 = sieuKhoPhoiCoDai[Math.floor(Math.random() * sieuKhoPhoiCoDai.length)];
+                let s6 = sieuKhoPhoiCoDai[Math.floor(Math.random() * sieuKhoPhoiCoDai.length)];
+                
+                let pureAncientString = s1 + s2 + s3 + s4 + s5 + s6;
+
+                khoGốcBiMat.push({
+                    id: autoId,
+                    name: "CLOUD CORE",
+                    char: pureAncientString
+                });
+            }
+        }
+
+        // NÚT BẤM GIA TỐC: Bơm thêm hàng loạt chuỗi khủng cực nhanh
+        function injectMoreCloudTurboSymbols() {
+            generateCloudSymbols(1500); // Nhồi cấp tốc thêm 1500 chuỗi bùa chú dằng dặc vào danh sách
+            buildLayoutMatrix(khoGốcBiMat, "secRenderContainer", true);
+            updateCloudStatusLog();
+        }
+
+        function updateCloudStatusLog() {
+            // Hiển thị trạng thái tính toán vạn tỷ nhảy số liên tục để chứng minh sức mạnh máy chủ đám mây
+            document.getElementById("secLog").innerHTML = `<span style='color:#33ff33; font-weight:bold;'>[CLOUD ACTIVE] Máy chủ đang xả đạn! Đã đúc: ${khoGốcBiMat.length} chuỗi bùa chú. Thuật toán phối hợp đạt khả năng tạo 10,000,000,000,000+ tổ hợp chữ cổ đặc biệt không giới hạn!</span>`;
+        }
+
+        // --- CƠ CHẾ KHÔNG GIỚI HẠN: CUỘN MÀN HÌNH TỰ ĐỘNG ĐẺ CHỮ ---
+        // Do chạy trên máy chủ Cloud mạnh mẽ, khi bạn cuộn cái hộp danh sách xuống gần đáy, hệ thống sẽ tự động đúc nạp thêm 200 chuỗi mới dốc vào tiếp. Cứ thế cuộn hoài chữ cổ tuôn ra hoài không bao giờ cạn!
+        const secretContainerBox = document.getElementById("secRenderContainer");
+        secretContainerBox.addEventListener("scroll", () => {
+            if (secretContainerBox.scrollTop + secretContainerBox.clientHeight >= secretContainerBox.scrollHeight - 60) {
+                generateCloudSymbols(200); // Tự động nhồi thêm 200 chuỗi bùa chú cổ dị hợm vào đáy danh sách
+                buildLayoutMatrix(khoGốcBiMat, "secRenderContainer", true);
+            }
+        });
+
+        // TÌM KIẾM MẶT TIỀN CÔNG KHAI
+        function searchPubData() {
+            let kw = document.getElementById("pubInput").value.toLowerCase().trim();
+            if (kw === "") {
+                buildLayoutMatrix(khoGốcCongKhai, "pubRenderContainer", false);
+                document.getElementById("pubLog").innerText = "Hệ thống mặt tiền hoạt động ổn định.";
+                return;
+            }
+            let output = khoGốcCongKhai.filter(i => i.id.includes(kw) || i.char.includes(kw));
+            buildLayoutMatrix(output, "pubRenderContainer", false);
+            document.getElementById("pubLog").innerHTML = `<span style="color:#00ffff">Tìm thấy ${output.length} mã công khai!</span>`;
+        }
+
+        // TÌM KIẾM NGẦM TRONG 8386
+        function searchSecData() {
+            let kw = document.getElementById("secInput").value.toLowerCase().trim();
+            if (kw === "") {
+                buildLayoutMatrix(khoGốcBiMat, "secRenderContainer", true);
+                updateCloudStatusLog();
+                return;
+            }
+            let output = khoGốcBiMat.filter(i => i.id.includes(kw) || i.char.includes(kw));
+            buildLayoutMatrix(output, "secRenderContainer", true);
+            document.getElementById("secLog").innerHTML = `<span style="color:#ff0055">Bộ quét đám mây phát hiện ${output.length} mật mã gốc!</span>`;
+        }
+
+        // TỰ ĐỘNG CHẠY HIỂN THỊ MẶT TIỀN KHI LÊN TRANG WEB
+        buildLayoutMatrix(khoGốcCongKhai, "pubRenderContainer", false);
+    </script>
+</body>
+</html>
